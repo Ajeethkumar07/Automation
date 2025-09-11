@@ -1,0 +1,88 @@
+/* Make all text input labels bold */
+.stTextInput > label {
+    font-weight: 700;
+    font-size: 1.1em;
+    color: #fff;
+}
+body, .stApp {
+    background: linear-gradient(120deg, #5F08B1 0%, #713FF2 50%, #C86DD7 100%);
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.header-glass {
+    background: rgba(255,255,255,0.18);
+    border-radius: 32px;
+    box-shadow: 0 6px 28px rgba(31,38,135,0.25);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.19);
+    width: 430px;
+    margin: 48px auto 32px auto;
+    text-align: center;
+    padding: 1.4rem 0.5rem 1.0rem 0.5rem;
+    position: relative;
+}
+.header-glass h2 {
+    color: #fff;
+    font-weight: 900;
+    font-size: 2rem;
+    margin: 0;
+    letter-spacing: 1px;
+}
+.center-box {
+    background: rgba(0,0,0,0.75);
+    border-radius: 28px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.5);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.15);
+    width: 430px;
+    margin: 0 auto;
+    padding: 2.4rem 2rem 1.5rem 2rem;
+    position: relative;
+}
+.center-box label {
+    font-size: 1.15em;
+    color: #fff;
+    font-weight: bold;
+    margin-bottom: 0.45em;
+    text-align: left;
+    display: block;
+}
+.center-box input {
+    border-radius: 50px;
+    border: none;
+    padding: 0.9em 1.7em;
+    background: rgba(255,255,255,0.15);
+    margin-bottom: 1em;
+    width: 100%;
+    font-size: 1.17em;
+    color: #fff;
+}
+.center-box input::placeholder {
+    color: #bcbcbc;
+    font-size: 1em;
+}
+
+/* ---- Verify Button (centered, black default, white on hover) ---- */
+div.stButton > button, div.stFormSubmitButton > button {
+    display: block;
+    margin: 1rem auto;
+    padding: 12px 36px;
+    font-size: 1.2rem;
+    border-radius: 35px;
+    background: black !important;
+    color: white !important;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0,0,0,.5);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border: none;
+    width: auto !important;
+    min-width: 150px;
+}
+div.stButton > button:hover, div.stFormSubmitButton > button:hover {
+    background: white !important;
+    color: black !important;
+}
+
+@media (max-width:560px){
+    .header-glass, .center-box { width: 97vw; }
+}
