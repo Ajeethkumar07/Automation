@@ -159,3 +159,4 @@ elif st.session_state.page == "home":
             st.rerun()
 
         st.markdown('</div>', unsafe_allow_html=True)
+        print("Logged out.")
