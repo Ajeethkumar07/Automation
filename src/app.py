@@ -2,16 +2,18 @@ import streamlit as st
 from dotenv import load_dotenv
 import os, random, smtplib
 from email.message import EmailMessage
+import pandas as pd
 
+# Load environment variables
 load_dotenv()
 
+# Load local CSS file
 def local_css(file_name):
-    file_path = os.path.join(os.path.dirname(__file__), file_name)
+    file_path = os.path.abspath(file_name)   # safer path handling
     with open(file_path, "r") as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 local_css("design.css")
-
 
 # Hide Streamlit menu and footer globally
 hide_streamlit_style = """
@@ -23,6 +25,7 @@ hide_streamlit_style = """
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
+# --- Credentials from .env ---
 valid_email = os.getenv("LOGIN_EMAIL")
 valid_password = os.getenv("LOGIN_PASSWORD")
 SMTP_HOST = os.getenv("SMTP_HOST")
@@ -41,15 +44,40 @@ for key, val in {
     if key not in st.session_state:
         st.session_state[key] = val
 
+# OTP generator
 def generate_otp():
     return str(random.randint(100000, 999999))
 
+# Function to send OTP email
 def send_email_otp(receiver_email, otp):
+    quotes = [
+        "🌟 Believe you can and you're halfway there.",
+        "🚀 Success is not final, failure is not fatal: it is the courage to continue that counts.",
+        "💡 Small steps every day lead to big results.",
+        "🔥 Push yourself, because no one else is going to do it for you.",
+        "🌈 Every day is a new beginning — take a deep breath and start again."
+    ]
+    chosen_quote = random.choice(quotes)
+
     msg = EmailMessage()
-    msg["Subject"] = "Your OTP Code"
+    msg["Subject"] = "🔐 Your OTP Code for Secure Login"
     msg["From"] = SMTP_USER
     msg["To"] = receiver_email
-    msg.set_content(f"Your OTP is {otp}. It expires in 5 minutes.")
+    msg.set_content(
+        f"""
+👋Hello!
+
+{chosen_quote}
+
+Here is your one-time password (OTP) for login: {otp}
+
+⏰ Note: This OTP will expire in 5 minutes, so please use it promptly.
+
+Warm regards,  
+Abb_Automation 🤖
+"""
+    )
+
     try:
         with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
             server.starttls()
@@ -59,8 +87,7 @@ def send_email_otp(receiver_email, otp):
     except Exception as e:
         return {"error": str(e)}
 
-# st.markdown('<div class="header-glass"><h2>Welcome to Automation</h2></div>', unsafe_allow_html=True)
-
+# --- LOGIN PAGE ---
 if st.session_state.page == "login":
     st.markdown('<div class="header-glass"><h2>Welcome to Automation</h2></div>', unsafe_allow_html=True)
     with st.form("login_form"):
@@ -89,13 +116,14 @@ if st.session_state.page == "login":
     if st.session_state.login_error:
         st.error(st.session_state.login_error)
 
+# --- OTP PAGE ---
 elif st.session_state.page == "otp":
     st.markdown("<h2>Enter OTP</h2>", unsafe_allow_html=True)
     with st.form("otp_form"):
         user_otp = st.text_input("Enter OTP", max_chars=6)
         col1, col2, col3 = st.columns([1,1,1])
         with col2:
-            submit = st.form_submit_button("Send OTP")
+            submit = st.form_submit_button("Verify OTP")   # fixed label
     st.session_state.login_error = ""
 
     if submit:
@@ -109,8 +137,8 @@ elif st.session_state.page == "otp":
     if st.session_state.login_error:
         st.error(st.session_state.login_error)
 
+# --- HOME PAGE ---
 elif st.session_state.page == "home":
-    # st.markdown('<div class="center-box">', unsafe_allow_html=True)
     st.markdown('<div class="header-glass"><h2>🏠 Home Page</h2></div>', unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
@@ -132,31 +160,26 @@ elif st.session_state.page == "home":
         </p>
         """, unsafe_allow_html=True)
 
-        import pandas as pd
-         # Randomly pick a tier type
         tier_types = ["standard", "non-standard", "weak"]
         chosen_tier = random.choice(tier_types)
-
         data = {"abc": [f"tier:{chosen_tier}"]}
         st.table(pd.DataFrame(data))
 
     elif st.session_state.page_section == "Listeners":
         st.markdown('<p style="color: white;">In cybersecurity, a Listener (or Listening Service/Port) refers to a process, service, or program that is actively waiting for incoming connections over a network.</p>', unsafe_allow_html=True)
-        import pandas as pd
-         # Randomly pick a tier type
+
         tier_types = ["Micro", "Macro"]
         chosen_tier = random.choice(tier_types)
-
         data = {"xyz": [f"Size:{chosen_tier}"]}
         st.table(pd.DataFrame(data))
     
+    # Logout
     col1, col2, col3 = st.columns([1,1,1])
     with col2:
         if st.button("🚪 Logout"):
-            for key in list(st.session_state.keys()):
-                del st.session_state[key]
+            st.session_state.clear()
             st.session_state.page = "login"
+            st.success("✅ Logged out successfully")
             st.rerun()
 
         st.markdown('</div>', unsafe_allow_html=True)
-        print("Logged out.")
