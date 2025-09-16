@@ -9,7 +9,7 @@ load_dotenv()
 
 # Load local CSS file
 def local_css(file_name):
-    file_path = os.path.abspath(file_name)   # safer path handling
+    file_path = os.path.join(os.path.dirname(__file__), file_name)
     with open(file_path, "r") as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
