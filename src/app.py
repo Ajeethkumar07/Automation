@@ -141,7 +141,15 @@ elif st.session_state.page == "home":
         st.table(pd.DataFrame(data))
 
     elif st.session_state.page_section == "Listeners":
-        st.markdown('<p style="color: white;">Listeners section content goes here. Customize as needed.</p>', unsafe_allow_html=True)
+        st.markdown('<p style="color: white;">In cybersecurity, a Listener (or Listening Service/Port) refers to a process, service, or program that is actively waiting for incoming connections over a network.</p>', unsafe_allow_html=True)
+        import pandas as pd
+         # Randomly pick a tier type
+        tier_types = ["Micro", "Macro"]
+        chosen_tier = random.choice(tier_types)
+
+        data = {"xyz": [f"Size:{chosen_tier}"]}
+        st.table(pd.DataFrame(data))
+    
     col1, col2, col3 = st.columns([1,1,1])
     with col2:
         if st.button("🚪 Logout"):
