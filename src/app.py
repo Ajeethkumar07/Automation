@@ -14,18 +14,24 @@ def local_css(file_name):
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 local_css("design.css")
+print("CSS loaded")
 
-# Hide Streamlit menu and footer globally
-hide_streamlit_style = """
-    <style>
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    .stApp [data-testid="stSidebar"] {display: none;}
-    </style>
-"""
-st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+# # Hide Streamlit menu and footer globally
+# hide_streamlit_style = """
+#     <style>
+#     #MainMenu {visibility: hidden;}
+#     footer {visibility: hidden;}
+#     header {visibility: hidden;}
+#     [data-testid="stSidebar"] {display: none !important;}
+#     [data-testid="collapsedControl"] {display: none !important;}
+#     [data-testid="stDecoration"] {display: none !important;}
+#     [data-testid="stToolbar"] {visibility: hidden !important;}
+#     #root > div:nth-child(1) > div > div > div > div > section > div {padding-top: 0rem;}
+#     </style>
+# """
+# st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-# --- Credentials from .env ---
+# Environment variables
 valid_email = os.getenv("LOGIN_EMAIL")
 valid_password = os.getenv("LOGIN_PASSWORD")
 SMTP_HOST = os.getenv("SMTP_HOST")
@@ -33,7 +39,7 @@ SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
 SMTP_USER = os.getenv("SMTP_USER")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
 
-# Initialize session_state keys
+
 for key, val in {
     "page": "login",            # Tracks current UI page: login, otp, home
     "generated_otp": None,
@@ -60,12 +66,12 @@ def send_email_otp(receiver_email, otp):
     chosen_quote = random.choice(quotes)
 
     msg = EmailMessage()
-    msg["Subject"] = "🔐 Your OTP Code for Secure Login"
+    msg["Subject"] = "🔐 OTP Code for Secure Login"
     msg["From"] = SMTP_USER
     msg["To"] = receiver_email
     msg.set_content(
         f"""
-👋Hello!
+👋 Hello!
 
 {chosen_quote}
 
@@ -101,10 +107,11 @@ if st.session_state.page == "login":
 
     if verify:
         if email == valid_email and password == valid_password:
-            otp = generate_otp()
-            st.session_state.generated_otp = otp
-            st.session_state.verified_email = email
-            resp = send_email_otp(email, otp)
+            with st.spinner("Sending OTP, please wait..."):
+                otp = generate_otp()
+                st.session_state.generated_otp = otp
+                st.session_state.verified_email = email
+                resp = send_email_otp(email, otp)
             if resp.get("success"):
                 st.session_state.page = "otp"
                 st.rerun()
