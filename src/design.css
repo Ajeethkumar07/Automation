@@ -86,3 +86,27 @@ div.stButton > button:hover, div.stFormSubmitButton > button:hover {
 @media (max-width:560px){
     .header-glass, .center-box { width: 97vw; }
 }
+#MainMenu {
+    visibility: hidden;
+}
+footer {
+    visibility: hidden;
+}
+header {
+    visibility: hidden;
+}
+[data-testid="stSidebar"] {
+    display: none !important;
+}
+[data-testid="collapsedControl"] {
+    display: none !important;
+}
+[data-testid="stDecoration"] {
+    display: none !important;
+}
+[data-testid="stToolbar"] {
+    visibility: hidden !important;
+}
+#root > div:nth-child(1) > div > div > div > div > section > div {
+    padding-top: 0rem;
+}
