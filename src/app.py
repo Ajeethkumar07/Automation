@@ -7,14 +7,21 @@ import pandas as pd
 # Load environment variables
 load_dotenv()
 
+
 # Load local CSS file
-def local_css(file_name):
-    file_path = os.path.join(os.path.dirname(__file__), file_name)
-    with open(file_path, "r") as f:
-        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+def local_css(file_name: str):
+    # directory of the current app.py file
+    current_dir = os.path.dirname(__file__)
+    file_path = os.path.join(current_dir, file_name)
+
+    if os.path.exists(file_path):
+        with open(file_path, "r") as f:
+            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+        print("CSS loaded from:", file_path)
+    else:
+        print("❌ CSS file not found:", file_path)
 
 local_css("design.css")
-print("CSS loaded")
 
 # # Hide Streamlit menu and footer globally
 # hide_streamlit_style = """
